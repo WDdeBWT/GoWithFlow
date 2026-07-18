@@ -1,0 +1,80 @@
+[
+  {
+    "id": "p1",
+    "name": "怀柔山间的清晨咖啡馆",
+    "type": "咖啡馆",
+    "district": "怀柔区",
+    "lat": 40.4328,
+    "lon": 116.6317,
+    "tags": ["山景", "安静", "有电源", "咖啡"],
+    "comments": ["山里凉快，坐在窗边能写一下午代码", "人不多，氛围很松弛", "窗外就是山景，非常治愈"],
+    "has_power": true,
+    "pet_friendly": false,
+    "indoor": true
+  },
+  {
+    "id": "p2",
+    "name": "密云溪边林荫步道",
+    "type": "自然景观",
+    "district": "密云区",
+    "lat": 40.5290,
+    "lon": 116.8112,
+    "tags": ["溪流", "林荫道", "徒步", "凉爽"],
+    "comments": ["溪水很清，树荫覆盖率很高", "夏天走也不热，适合散步发呆", "人少，能听到鸟叫"],
+    "has_power": false,
+    "pet_friendly": true,
+    "indoor": false
+  },
+  {
+    "id": "p3",
+    "name": "延庆乡村书店",
+    "type": "书店",
+    "district": "延庆区",
+    "lat": 40.4565,
+    "lon": 115.9788,
+    "tags": ["乡村", "安静", "阅读", "有电源"],
+    "comments": ["院子里可以坐着看书", "室内有插座，适合带电脑", "周围环境很专注"],
+    "has_power": true,
+    "pet_friendly": false,
+    "indoor": true
+  },
+  {
+    "id": "p4",
+    "name": "昌平半山腰露营咖啡",
+    "type": "咖啡馆",
+    "district": "昌平区",
+    "lat": 40.2590,
+    "lon": 116.2205,
+    "tags": ["露营", "开阔", "咖啡", "宠物友好"],
+    "comments": ["半露天，风景很开阔", "可以带狗，宠物友好", "下午风很凉快"],
+    "has_power": true,
+    "pet_friendly": true,
+    "indoor": false
+  },
+  {
+    "id": "p5",
+    "name": "平谷桃林深处茶室",
+    "type": "茶室",
+    "district": "平谷区",
+    "lat": 40.1836,
+    "lon": 117.1016,
+    "tags": ["桃林", "安静", "喝茶", "自然"],
+    "comments": ["被桃树包围，很有季节性氛围", "适合放空，不吵", "室内外都有座位"],
+    "has_power": false,
+    "pet_friendly": true,
+    "indoor": true
+  },
+  {
+    "id": "p6",
+    "name": "门头沟废弃矿坑图书馆",
+    "type": "文化空间",
+    "district": "门头沟区",
+    "lat": 39.9015,
+    "lon": 115.9874,
+    "tags": ["工业风", "安静", "有电源", "独特"],
+    "comments": ["改造得很独特，不是网红地", "空间很大，适合专注工作", "窗外有山景，咖啡一般但氛围好"],
+    "has_power": true,
+    "pet_friendly": false,
+    "indoor": true
+  }
+]
