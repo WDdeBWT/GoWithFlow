@@ -26,8 +26,14 @@
 ## 配置
 
 - 后端 `.env`：`DEEPSEEK_API_KEY`、`DEEPSEEK_MODEL=deepseek-v4-flash`、`AMAP_JS_KEY`
-- 前端 `.env`：`VITE_AMAP_JS_KEY`（可选）
+- 前端 `.env`：`VITE_API_BASE`（默认指向远程后端）、`VITE_AMAP_JS_KEY`（可选）
 - 项目提供 `.env.example` 模板；`.env` 已加入 `.gitignore`，不进入版本库。
+
+## 数据策略
+
+- **当前**：`backend/app/data/beijing_pois.json` 是 6 条手写种子数据，用于验证推荐引擎。这些不是真实 POI，命名和评论为示意。
+- **MVP 数据路线**：接入高德地图 POI 搜索/详情官方 API（需要 `AMAP_WEB_KEY`），获取北京真实 POI 的名称、坐标、类型、行政区；再人工为每个 POI 补充 3–5 条“氛围”短句，替换当前种子数据。
+- **长期**：如合规可行，再接入大众点评/小红书等 UGC 评论；MVP 阶段不爬取，规避法律与反爬风险。
 
 ## 部署
 
@@ -40,7 +46,7 @@
 
 - PRD 已整理：`docs/PRD.md`
 - 后端 API 已实现并部署：`http://47.89.243.26:8088/health` 可访问。
-- 下一步：开发前端页面（React + Vite + Tailwind），并部署到 8089 端口。
+- 前端 React 页面已补充，等待构建与部署到 8089 端口。
 
 ## 待确认/待提供
 
