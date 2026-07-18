@@ -1,7 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.models import UserQuery, Recommendation
+from app.config import DEFAULT_CITY_CENTER
+from app.models import UserQuery
+from app.services.intent import parse_intent
+from app.services.weather import get_weather
+from app.services.poi import load_pois, filter_pois
+from app.services.ranking import rank_pois
+from app.services.feedback import adjust_intent
 
 app = FastAPI(title="GoWithFlow API", version="0.1.0")
 
@@ -19,13 +25,29 @@ def health():
     return {"status": "ok"}
 
 
-@app.post("/recommend", response_model=list[Recommendation])
-def recommend(query: UserQuery):
-    # TODO: 接入意图解析、天气、POI 排序
-    return []
+@app.post("/recommend")
+async def recommend(
+    query: UserQuery,
+    lat: float = Query(DEFAULT_CITY_CENTER[0]),
+    lon: float = Query(DEFAULT_CITY_CENTER[1]),
+):
+    intent, follow_up = parse_intent(query.text)
+    weather = await get_weather(lat, lon)
+    candidates = filter_pois(load_pois(), intent)
+    recommendations = rank_pois(intent, weather, lat, lon, candidates)
+    return {"follow_up": follow_up, "recommendations": recommendations}
 
 
 @app.post("/feedback")
-def feedback(type: str):
-    # TODO: 基于失败维度替换全部 3 个推荐
-    return {"type": type, "recommendations": []}
+async def feedback(
+    query: UserQuery,
+    feedback_type: str,
+    lat: float = Query(DEFAULT_CITY_CENTER[0]),
+    lon: float = Query(DEFAULT_CITY_CENTER[1]),
+):
+    intent, _ = parse_intent(query.text)
+    adjusted = adjust_intent(intent, feedback_type)
+    weather = await get_weather(lat, lon)
+    candidates = filter_pois(load_pois(), adjusted)
+    recommendations = rank_pois(adjusted, weather, lat, lon, candidates)
+    return {"recommendations": recommendations}
