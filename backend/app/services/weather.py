@@ -1,5 +1,6 @@
 import httpx
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 async def get_weather(lat: float, lon: float) -> dict:
@@ -11,12 +12,12 @@ async def get_weather(lat: float, lon: float) -> dict:
         "timezone": "Asia/Shanghai",
         "forecast_days": 1,
     }
-    async with httpx.AsyncClient(timeout=10) as client:
+    async with httpx.AsyncClient(timeout=10, trust_env=False) as client:
         r = await client.get(url, params=params)
         r.raise_for_status()
         data = r.json()
 
-    now = datetime.now().strftime("%Y-%m-%dT%H:00")
+    now = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%dT%H:00")
     times = data["hourly"]["time"]
     idx = 0
     for i, t in enumerate(times):

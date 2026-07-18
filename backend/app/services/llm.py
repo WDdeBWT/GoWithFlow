@@ -1,7 +1,12 @@
+import httpx
 from openai import OpenAI
 from app.config import DEEPSEEK_API_KEY, DEEPSEEK_MODEL
 
-client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+client = OpenAI(
+    api_key=DEEPSEEK_API_KEY,
+    base_url="https://api.deepseek.com",
+    http_client=httpx.Client(trust_env=False),
+)
 
 
 def chat(messages: list, temperature: float = 0.2, response_format: dict | None = None) -> str:
