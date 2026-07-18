@@ -12,6 +12,7 @@ const DEFAULT_CENTER = { lat: 39.9042, lon: 116.4074 }
 function App() {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loadingStep, setLoadingStep] = useState('')
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
   const [location, setLocation] = useState(DEFAULT_CENTER)
@@ -29,28 +30,46 @@ function App() {
     e.preventDefault()
     if (!text.trim()) return
     setLoading(true)
+    setLoadingStep('正在解析你的心境，匹配地点...')
     setError('')
     setResult(null)
     try {
-      const data = await recommend(text, location.lat, location.lon)
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 30000)
+      const data = await recommend(text, location.lat, location.lon, controller.signal)
+      clearTimeout(timer)
       setResult(data)
     } catch (err) {
-      setError('请求失败，请稍后重试')
+      if (err.name === 'AbortError') {
+        setError('请求超时，请重试')
+      } else {
+        setError('请求失败，请稍后重试')
+      }
     } finally {
       setLoading(false)
+      setLoadingStep('')
     }
   }
 
   const handleFeedback = async (type) => {
     if (!result) return
     setLoading(true)
+    setLoadingStep('正在根据反馈重新匹配...')
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 30000)
     try {
-      const data = await sendFeedback(text, type, location.lat, location.lon)
+      const data = await sendFeedback(text, type, location.lat, location.lon, controller.signal)
+      clearTimeout(timer)
       setResult(data)
     } catch (err) {
-      setError('反馈替换失败')
+      if (err.name === 'AbortError') {
+        setError('反馈请求超时')
+      } else {
+        setError('反馈替换失败')
+      }
     } finally {
       setLoading(false)
+      setLoadingStep('')
     }
   }
 
@@ -84,9 +103,18 @@ function App() {
             disabled={loading}
             className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? '推荐中...' : '开始推荐'}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                匹配中...
+              </span>
+            ) : '开始推荐'}
           </button>
         </form>
+
+        {loadingStep && (
+          <p className="text-center text-gray-500 mt-2 mb-4">{loadingStep}</p>
+        )}
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
 

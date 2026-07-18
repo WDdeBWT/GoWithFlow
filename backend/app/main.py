@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import DEFAULT_CITY_CENTER
 from app.models import UserQuery
-from app.services.intent import parse_intent
+from app.services.intent_rule import parse_intent_rule
 from app.services.weather import get_weather
 from app.services.poi import load_pois, filter_pois
 from app.services.ranking import rank_pois
@@ -31,7 +31,7 @@ async def recommend(
     lat: float = Query(DEFAULT_CITY_CENTER[0]),
     lon: float = Query(DEFAULT_CITY_CENTER[1]),
 ):
-    intent, follow_up = parse_intent(query.text)
+    intent, follow_up = parse_intent_rule(query.text)
     weather = await get_weather(lat, lon)
     candidates = filter_pois(load_pois(), intent)
     recommendations = rank_pois(intent, weather, lat, lon, candidates)
@@ -45,7 +45,7 @@ async def feedback(
     lat: float = Query(DEFAULT_CITY_CENTER[0]),
     lon: float = Query(DEFAULT_CITY_CENTER[1]),
 ):
-    intent, _ = parse_intent(query.text)
+    intent, _ = parse_intent_rule(query.text)
     adjusted = adjust_intent(intent, feedback_type)
     weather = await get_weather(lat, lon)
     candidates = filter_pois(load_pois(), adjusted)
